@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes d'Empathie - Secteur Médical International</title>
+    <style>
+        :root {
+            --primary-color: #4a2c2a;
+            --secondary-color: #e74c3c;
+            --accent-color: #f39c12;
+            --light-color: #fff5ec;
+            --dark-color: #663a35;
+            --success-color: #ff6b4a;
+            --warning-color: #ff9f43;
+            --danger-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff5ec;
+            color: var(--primary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #ff6b4a;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            margin: 0 10px;
+            background-color: var(--light-color);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab.active {
+            background-color: #ff6b4a;
+            color: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #ffe0d1;
+        }
+        
+        .empathy-map {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .empathy-map.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .persona-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.15);
+        }
+        
+        .persona-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 5px solid #ff6b4a;
+        }
+        
+        .persona-info h2 {
+            margin: 0 0 10px 0;
+            color: #e74c3c;
+            font-size: 2rem;
+        }
+        
+        .persona-role {
+            color: #4a2c2a;
+            font-style: italic;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .persona-quote {
+            background-color: #fff5ec;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+            font-style: italic;
+            color: #4a2c2a;
+            margin-top: 15px;
+            border-left: 4px solid #ff9f43;
+        }
+        
+        .persona-quote:before {
+            content: """;
+            font-size: 60px;
+            position: absolute;
+            left: 5px;
+            top: -20px;
+            color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .empathy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .empathy-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid #ff9f43;
+        }
+        
+        .empathy-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fff5ec;
+        }
+        
+        .section-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: #ff6b4a;
+        }
+        
+        h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+        
+        .section-items {
+            padding-left: 20px;
+        }
+        
+        .section-item {
+            position: relative;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .section-item:before {
+            content: "•";
+            color: #ff9f43;
+            position: absolute;
+            left: -20px;
+            font-weight: bold;
+        }
+        
+        .freins {
+            border-top-color: #e74c3c;
+        }
+        
+        .freins .section-title {
+            color: #e74c3c;
+        }
+        
+        .freins .section-icon {
+            color: #e74c3c;
+        }
+        
+        .motivations {
+            border-top-color: #ff6b4a;
+        }
+        
+        .motivations .section-title {
+            color: #ff6b4a;
+        }
+        
+        .motivations .section-icon {
+            color: #ff6b4a;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #ff6b4a;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .empathy-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .persona-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .persona-image {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cartes d'Empathie</h1>
+            <div class="subtitle">Adoption de l'IA dans le Secteur Médical International</div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showMap('ingenieur')">Thomas - Ingénieur</button>
+            <button class="tab" onclick="showMap('chercheur')">Sophie - Chercheuse</button>
+        </div>
+        
+        <div id="ingenieur" class="empathy-map active">
+            <div class="persona-header">
+                <img id="thomas-image" src="thomas.png" alt="Thomas" class="persona-image">
+                <div class="persona-info">
+                    <h2>THOMAS, 42 ANS</h2>
+                    <div class="persona-role">Ingénieur en dispositifs médicaux depuis 15 ans</div>
+                    <div class="persona-quote">
+                        "Je veux bien intégrer l'IA dans nos dispositifs médicaux, mais comment garantir sa fiabilité quand des vies de patients sont en jeu?"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="empathy-grid">
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">🧠</div>
+                        <h3>CE QUE JE PENSE ET RESSENS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Comment garantir la sécurité des patients avec ces nouvelles technologies?</li>
+                        <li class="section-item">Est-ce que l'IA peut réellement comprendre les subtilités cliniques?</li>
+                        <li class="section-item">Ces systèmes sont-ils conformes aux réglementations médicales internationales?</li>
+                        <li class="section-item">Je suis partagé entre l'innovation et le principe médical "d'abord, ne pas nuire"</li>
+                        <li class="section-item">La responsabilité en cas d'erreur algorithmique me préoccupe énormément</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👄</div>
+                        <h3>CE QUE JE DIS ET FAIS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Je demande des études cliniques approfondies avant d'implémenter toute solution IA</li>
+                        <li class="section-item">Je souligne les contraintes réglementaires (FDA, CE, PMDA) lors des réunions</li>
+                        <li class="section-item">Je teste minutieusement les algorithmes sur des données historiques anonymisées</li>
+                        <li class="section-item">J'exige une traçabilité complète des décisions algorithmiques</li>
+                        <li class="section-item">J'insiste sur la nécessité de conserver un contrôle humain sur les diagnostics</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👁️</div>
+                        <h3>CE QUE JE VOIS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Des startups medtech qui lancent des solutions IA sans validation clinique suffisante</li>
+                        <li class="section-item">Des autorités réglementaires qui renforcent les contrôles sur les dispositifs basés sur l'IA</li>
+                        <li class="section-item">Des concurrents qui obtiennent des certifications pour leurs algorithmes de diagnostic</li>
+                        <li class="section-item">Des variations de performance des systèmes selon les populations de patients</li>
+                        <li class="section-item">Des projets coûteux qui échouent lors des essais cliniques</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👂</div>
+                        <h3>CE QUE J'ENTENDS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Des praticiens hospitaliers exprimer des doutes sur la fiabilité des diagnostics automatisés</li>
+                        <li class="section-item">Des patients inquiets face à l'utilisation de l'IA pour leur traitement</li>
+                        <li class="section-item">Des équipes commerciales promettre des capacités d'IA parfois exagérées</li>
+                        <li class="section-item">Des récits de réussites et d'échecs dans nos filiales internationales</li>
+                        <li class="section-item">Des investisseurs qui poussent pour l'adoption rapide de ces technologies</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section freins">
+                    <div class="section-title">
+                        <div class="section-icon">❌</div>
+                        <h3>MES FREINS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Les algorithmes "boîtes noires" sont incompatibles avec nos exigences de transparence médicale</li>
+                        <li class="section-item">Comment expliquer les décisions de l'IA aux médecins et aux autorités réglementaires?</li>
+                        <li class="section-item">Les données médicales internationales présentent des biais culturels et démographiques</li>
+                        <li class="section-item">La conformité au RGPD, HIPAA et autres réglementations locales complexifie le déploiement</li>
+                        <li class="section-item">Le processus de certification médical est extrêmement long et coûteux pour les solutions IA</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section motivations">
+                    <div class="section-title">
+                        <div class="section-icon">✅</div>
+                        <h3>MES MOTIVATIONS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Contribuer à sauver des vies grâce à des diagnostics plus précis et plus rapides</li>
+                        <li class="section-item">Rendre nos dispositifs médicaux accessibles dans des régions sous-dotées en spécialistes</li>
+                        <li class="section-item">Standardiser la qualité des soins à l'échelle internationale</li>
+                        <li class="section-item">Réduire la charge cognitive des praticiens face à l'explosion des données médicales</li>
+                        <li class="section-item">Positionner notre entreprise comme leader de l'innovation médicale responsable</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="chercheur" class="empathy-map">
+            <div class="persona-header">
+                <img id="sophie-image" src="sophie.png" alt="Sophie" class="persona-image">
+                <div class="persona-info">
+                    <h2>SOPHIE, 38 ANS</h2>
+                    <div class="persona-role">Chercheuse en pharmacologie depuis 10 ans, docteure en biologie moléculaire</div>
+                    <div class="persona-quote">
+                        "L'IA pourrait révolutionner la découverte de médicaments, mais comment garantir que ces molécules seront réellement sûres et efficaces sur tous nos marchés internationaux?"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="empathy-grid">
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">🧠</div>
+                        <h3>CE QUE JE PENSE ET RESSENS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Comment valider biologiquement les molécules proposées par l'IA?</li>
+                        <li class="section-item">Les essais précliniques et cliniques restent indispensables malgré les simulations</li>
+                        <li class="section-item">Les algorithmes peuvent-ils réellement comprendre les interactions médicamenteuses complexes?</li>
+                        <li class="section-item">La diversité génétique mondiale est-elle correctement représentée dans les modèles?</li>
+                        <li class="section-item">Je m'inquiète des implications éthiques de l'IA dans la personnalisation des traitements</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👄</div>
+                        <h3>CE QUE JE DIS ET FAIS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Je réclame des protocoles rigoureux pour valider les hypothèses générées par l'IA</li>
+                        <li class="section-item">Je collabore avec nos équipes internationales pour tester les modèles sur diverses populations</li>
+                        <li class="section-item">Je documente méticuleusement les limites des prédictions algorithmiques</li>
+                        <li class="section-item">Je défends l'importance des tests in vivo même quand l'IA prédit des résultats positifs</li>
+                        <li class="section-item">J'explore des applications d'IA pour l'optimisation de nos protocoles d'essais cliniques</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👁️</div>
+                        <h3>CE QUE JE VOIS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Des entreprises pharmaceutiques concurrentes qui raccourcissent leur cycle de développement</li>
+                        <li class="section-item">Des variations d'efficacité des traitements selon les régions du monde</li>
+                        <li class="section-item">Des molécules prometteuses identifiées par IA mais qui échouent aux phases cliniques</li>
+                        <li class="section-item">Des autorités sanitaires (FDA, EMA, PMDA) qui développent des cadres d'évaluation pour l'IA</li>
+                        <li class="section-item">Des inégalités d'accès aux données médicales entre pays développés et en développement</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section">
+                    <div class="section-title">
+                        <div class="section-icon">👂</div>
+                        <h3>CE QUE J'ENTENDS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Des actionnaires qui veulent accélérer le développement de notre pipeline grâce à l'IA</li>
+                        <li class="section-item">Des patients dans les marchés émergents qui attendent des traitements adaptés à leur contexte</li>
+                        <li class="section-item">Des communautés médicales locales qui soulignent des spécificités génétiques régionales</li>
+                        <li class="section-item">Des régulateurs qui questionnent la transparence de nos algorithmes de recherche</li>
+                        <li class="section-item">Des collaborateurs en Asie, Europe et Amériques qui rapportent des défis culturels différents</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section freins">
+                    <div class="section-title">
+                        <div class="section-icon">❌</div>
+                        <h3>MES FREINS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">La complexité réglementaire internationale rend difficile l'adoption d'approches standardisées</li>
+                        <li class="section-item">Les modèles d'IA sont rarement validés sur des populations diversifiées</li>
+                        <li class="section-item">Les stratégies de propriété intellectuelle sont incertaines pour les molécules découvertes par IA</li>
+                        <li class="section-item">Les différences culturelles dans l'acceptation des technologies médicales varient selon les pays</li>
+                        <li class="section-item">La sensibilité des données de santé complique le partage entre nos centres de recherche globaux</li>
+                    </ul>
+                </div>
+                
+                <div class="empathy-section motivations">
+                    <div class="section-title">
+                        <div class="section-icon">✅</div>
+                        <h3>MES MOTIVATIONS</h3>
+                    </div>
+                    <ul class="section-items">
+                        <li class="section-item">Développer des traitements plus rapidement pour répondre aux besoins médicaux non satisfaits</li>
+                        <li class="section-item">Créer des médicaments personnalisés adaptés aux diversités génétiques mondiales</li>
+                        <li class="section-item">Réduire le taux d'échec des molécules en phase clinique avancée</li>
+                        <li class="section-item">Permettre un accès équitable aux innovations médicales dans tous nos marchés</li>
+                        <li class="section-item">Identifier des applications thérapeutiques alternatives pour nos molécules existantes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Cartes d'empathie pour l'adoption de l'IA dans le secteur médical international</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Essai d'intégrer les images des personas quand elles sont disponibles
+        function loadPersonaImages() {
+            const thomasImage = document.getElementById('thomas-image');
+            const sophieImage = document.getElementById('sophie-image');
+            
+            // Cette partie serait remplacée par votre code pour charger les vraies images
+            // Pour cette démonstration, on garde les placeholders
+        }
+        
+        function showMap(id) {
+            // Cacher toutes les cartes
+            document.querySelectorAll('.empathy-map').forEach(map => {
+                map.classList.remove('active');
+            });
+            
+            // Afficher la carte sélectionnée
+            document.getElementById(id).classList.add('active');
+            
+            // Mettre à jour les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Trouver l'onglet cliqué et le rendre actif
+            const tabs = document.querySelectorAll('.tab');
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].textContent.toLowerCase().includes(id === 'ingenieur' ? 'thomas' : 'sophie')) {
+                    tabs[i].classList.add('active');
+                    break;
+                }
+            }
+        }
+        
+        // Charger les images au démarrage
+        window.onload = function() {
+            loadPersonaImages();
+        };
+    </script>
+</body>
+</html>
